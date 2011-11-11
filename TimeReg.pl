@@ -138,21 +138,21 @@ my $fldNumber = $Window->AddTextfield(
 );
 
 my $btnOK = $Window->AddButton(
-    -name   => 'btnOK',
-    -text   => "OK",
-    -left   => 75,
-    -top    => 450,
-    -ok      => 1,
-    -tabstop => 1,
+	-name		=> 'btnOK',
+	-text		=> "OK",
+	-left		=> 75,
+	-top		=> 450,
+	-ok			=> 1,
+	-tabstop	=> 1,
 );
 
 my $btnSave = $Window->AddButton(
-    -name   => 'btnSave',
-    -text   => "Opslaan resultaten",
-    -left   => 75,
-    -top    => 600,
-    -ok      => 1,
-    -tabstop => 1,
+	-name		=> 'btnSave',
+	-text		=> "Opslaan resultaten",
+	-left		=> 75,
+	-top		=> 600,
+	-ok			=> 1,
+	-tabstop	=> 1,
 );
 
 # Fill Grid
@@ -185,157 +185,155 @@ Win32::GUI::Dialog();
 
 # Main window event handler
 sub Window_Terminate {
-    return -1;
+	return -1;
 }
 
 sub Window_Resize {
-    my ($width, $height) = ($Window->GetClientRect)[2..3];
-    $Grid->Resize ($width, $height);
+	my ($width, $height) = ($Window->GetClientRect)[2..3];
+	$Grid->Resize ($width, $height);
 }
 
 sub EventDropdown_Change {
-    SaveContestResult($event_id, $contest_id);
+	SaveContestResult($event_id, $contest_id);
 
-    StopContestTimer($event_id, $contest_id);
+	StopContestTimer($event_id, $contest_id);
 
-    ClearGrid($Grid);
-    
-    my $event = $EventList->GetString($EventList->SelectedItem);
-    $event_id = $EventIndex{$event};
+	ClearGrid($Grid);
 
-    $wave = $WaveIndex{$event};
+	my $event = $EventList->GetString($EventList->SelectedItem);
+	$event_id = $EventIndex{$event};
 
-    LoadContestList($event_id);
+	$wave = $WaveIndex{$event};
 
-    # reset contest to the first
-    $contest_id = 1;
-    $ContestList->SetCurSel($contest_id - 1);
+	LoadContestList($event_id);
 
-    LoadPersonList($event_id, $contest_id);
-    LoadContestTimer($event_id, $contest_id);
-    LoadContestResult($event_id, $contest_id);
-    
-    $Grid->Refresh();
+	# reset contest to the first
+	$contest_id = 1;
+	$ContestList->SetCurSel($contest_id - 1);
+
+	LoadPersonList($event_id, $contest_id);
+	LoadContestTimer($event_id, $contest_id);
+	LoadContestResult($event_id, $contest_id);
+
+	$Grid->Refresh();
 }
 
 sub ContestDropdown_Change {
-    SaveContestResult($event_id, $contest_id);
+	SaveContestResult($event_id, $contest_id);
 
-    StopContestTimer($event_id, $contest_id);
+	StopContestTimer($event_id, $contest_id);
 
-    ClearGrid($Grid);
-    
-    my $contest = $ContestList->GetString($ContestList->SelectedItem);
-    $contest_id = $ContestIndex{$contest};
-    $wave = $WaveIndex{$contest};
+	ClearGrid($Grid);
 
-    LoadPersonList($event_id, $contest_id);
-    LoadContestTimer($event_id, $contest_id);
-    LoadContestResult($event_id, $contest_id);
-    
-    $Grid->Refresh();
+	my $contest = $ContestList->GetString($ContestList->SelectedItem);
+	$contest_id = $ContestIndex{$contest};
+	$wave = $WaveIndex{$contest};
+
+	LoadPersonList($event_id, $contest_id);
+	LoadContestTimer($event_id, $contest_id);
+	LoadContestResult($event_id, $contest_id);
+
+	$Grid->Refresh();
 }
 
 sub StartTimer_Click() {
-    my $TimerFileName = "results/$event_id/$contest_id/timer.txt";
+	my $TimerFileName = "results/$event_id/$contest_id/timer.txt";
 
-    my $time = StartContestTimer($event_id, $contest_id);
+	my $time = StartContestTimer($event_id, $contest_id);
 
-    $txtClock->Text($time);
+	$txtClock->Text($time);
 }
 
 sub StopTimer_Click() {
-    StopContestTimer($event_id, $contest_id);
+	StopContestTimer($event_id, $contest_id);
 }
 
 sub ResetTimer_Click() {
-    StopContestTimer($event_id, $contest_id);
-    ResetContestTimer($event_id, $contest_id);
+	StopContestTimer($event_id, $contest_id);
+	ResetContestTimer($event_id, $contest_id);
 }
 
 sub btnOK_Click() {
-    my $number = $fldNumber->Text();
-    $number = 0 if ( $number eq "" );
-    
-    $Grid->EnsureCellVisible($place + 1, 0);
+	my $number = $fldNumber->Text();
+	$number = 0 if ( $number eq "" );
 
-    $Grid->SetCellText($place, 1, $number);
-    $Grid->RedrawCell($place, 1);
-    
-    $Grid->SetCellText($place, 2, $ElapsedTime);
-    $Grid->RedrawCell($place, 2);
+	$Grid->EnsureCellVisible($place + 1, 0);
 
-    if ( exists $PersonIndex->{$number}->{'name'} ) {
-        $Grid->SetCellText($place, 3, $PersonIndex->{$number}->{'name'});
-        $Grid->RedrawCell($place, 3);
-        
-        $Grid->SetCellText($place, 4, $PersonIndex->{$number}->{'year'});
-        $Grid->RedrawCell($place, 4);
-    
-        $Grid->SetCellText($place, 5, $PersonIndex->{$number}->{'sex'});
-        $Grid->RedrawCell($place, 5);
-    }
+	$Grid->SetCellText($place, 1, $number);
+	$Grid->RedrawCell($place, 1);
 
-    $Grid->AutoSize();
+	$Grid->SetCellText($place, 2, $ElapsedTime);
+	$Grid->RedrawCell($place, 2);
 
+	if ( exists $PersonIndex->{$number}->{'name'} ) {
+		$Grid->SetCellText($place, 3, $PersonIndex->{$number}->{'name'});
+		$Grid->RedrawCell($place, 3);
 
-    #$person->{$number}->{'name'} = $last_name." ".$first_name;
-    #$person->{$number}->{'contest_id'} = $contest_id;
-    #$person->{$number}->{'wave'} = $wave;
-    #$person->{$number}->{'year'} = $year;
-    #$person->{$number}->{'sex'} = $sex;
+		$Grid->SetCellText($place, 4, $PersonIndex->{$number}->{'year'});
+		$Grid->RedrawCell($place, 4);
 
+		$Grid->SetCellText($place, 5, $PersonIndex->{$number}->{'sex'});
+		$Grid->RedrawCell($place, 5);
+	}
 
-    $fldNumber->Text("");
+	$Grid->AutoSize();
 
-    $ResultArray[$place - 1]->{'Number'} = $number;
-    $ResultArray[$place - 1]->{'Time'} = $ElapsedTime;
-    AddResultToLog($place, $number, $ElapsedTime);
+#	$person->{$number}->{'name'} = $last_name." ".$first_name;
+#	$person->{$number}->{'contest_id'} = $contest_id;
+#	$person->{$number}->{'wave'} = $wave;
+#	$person->{$number}->{'year'} = $year;
+#	$person->{$number}->{'sex'} = $sex;
 
-    $place++;
+	$fldNumber->Text("");
+
+	$ResultArray[$place - 1]->{'Number'} = $number;
+	$ResultArray[$place - 1]->{'Time'} = $ElapsedTime;
+	AddResultToLog($place, $number, $ElapsedTime);
+
+	$place++;
 }
 
 sub btnSave_Click() {
-    my $rows = $place - 1;
+	my $rows = $place - 1;
 
-    my $ResultFileName = "results/$event_id/$contest_id/result_final.txt";
-    open my $outFile, ">".$ResultFileName;
+	my $ResultFileName = "results/$event_id/$contest_id/result_final.txt";
+	open my $outFile, ">".$ResultFileName;
 
-    foreach my $row ( 1..$rows ) {
-        my $place = $Grid->GetCellText($row, 0);
-        my $number = $Grid->GetCellText($row, 1);
-        my $time = $Grid->GetCellText($row, 2);
-        my $name = $Grid->GetCellText($row, 3);
-        my $year = $Grid->GetCellText($row, 4);
-        my $sex = $Grid->GetCellText($row, 5);
-        print $outFile $place."\t".$number."\t".$time."\t".$name."\t".$year."\t".$sex."\n";
-    }
-    
-    close $outFile;
+	foreach my $row ( 1..$rows ) {
+		my $place = $Grid->GetCellText($row, 0);
+		my $number = $Grid->GetCellText($row, 1);
+		my $time = $Grid->GetCellText($row, 2);
+		my $name = $Grid->GetCellText($row, 3);
+		my $year = $Grid->GetCellText($row, 4);
+		my $sex = $Grid->GetCellText($row, 5);
+		print $outFile $place."\t".$number."\t".$time."\t".$name."\t".$year."\t".$sex."\n";
+	}
+
+	close $outFile;
 }
 
 sub Grid_ChangedEdit {
-    my ($col, $row) = @_;
+	my ($col, $row) = @_;
 
-    my $text = $Grid->GetCellText($col, $row);
-    
-    print "EndEdit on Cell ($col, $row)\n";
-    print $text;
+	my $text = $Grid->GetCellText($col, $row);
+
+	print "EndEdit on Cell ($col, $row)\n";
+	print $text;
 }
 
 sub Timer1_Timer {
-    my ($sec, $min, $hour, undef) = localtime(time);
+	my ($sec, $min, $hour, undef) = localtime(time);
 
-    my $NowSeconds = ($hour * 3600) + ($min * 60) + $sec;
-    my $ElapsedSeconds = $NowSeconds - $StartTime->{'TotalSeconds'};
+	my $NowSeconds = ($hour * 3600) + ($min * 60) + $sec;
+	my $ElapsedSeconds = $NowSeconds - $StartTime->{'TotalSeconds'};
 
-    my $ElapsedHour = int($ElapsedSeconds / 3600); 
-    my $ElapsedMin = int(($ElapsedSeconds - ($ElapsedHour * 3600)) / 60 ) ; 
-    my $ElapsedSec = int($ElapsedSeconds - ($ElapsedHour * 3600) - ($ElapsedMin * 60)) ; 
+	my $ElapsedHour = int($ElapsedSeconds / 3600); 
+	my $ElapsedMin = int(($ElapsedSeconds - ($ElapsedHour * 3600)) / 60 ) ; 
+	my $ElapsedSec = int($ElapsedSeconds - ($ElapsedHour * 3600) - ($ElapsedMin * 60)) ; 
 
-    $ElapsedTime = sprintf("%02d:%02d:%02d", $ElapsedHour, $ElapsedMin, $ElapsedSec);
+	$ElapsedTime = sprintf("%02d:%02d:%02d", $ElapsedHour, $ElapsedMin, $ElapsedSec);
 
-    $txtClock->Text($ElapsedTime);
+	$txtClock->Text($ElapsedTime);
 }
 
 ##
@@ -343,85 +341,85 @@ sub Timer1_Timer {
 ##
 
 sub LoadContestTimer {
-    my $event_id = shift;
-    my $contest_id = shift;
+	my $event_id = shift;
+	my $contest_id = shift;
 
-    my $time = "--:--:--";
-    my $TimerFileName = "results/$event_id/$contest_id/timer.txt";
+	my $time = "--:--:--";
+	my $TimerFileName = "results/$event_id/$contest_id/timer.txt";
 
-    if ( -f $TimerFileName ) {
-        open my $inFile, "<".$TimerFileName;
-        my $line = <$inFile>;
-        close $inFile;
-	chomp $line;
+	if ( -f $TimerFileName ) {
+		open my $inFile, "<".$TimerFileName;
+		my $line = <$inFile>;
+		close $inFile;
+		chomp $line;
 
-	( $StartTime->{'TotalSeconds'}, $StartTime->{'Complete'} ) = split /\t/,$line;
+		( $StartTime->{'TotalSeconds'}, $StartTime->{'Complete'} ) = split /\t/,$line;
 
-        my ($sec, $min, $hour, undef) = localtime(time);
+		my ($sec, $min, $hour, undef) = localtime(time);
 
-        my $NowSeconds = ($hour * 3600) + ($min * 60) + $sec;
-        my $ElapsedSeconds = $NowSeconds - $StartTime->{'TotalSeconds'};
+		my $NowSeconds = ($hour * 3600) + ($min * 60) + $sec;
+		my $ElapsedSeconds = $NowSeconds - $StartTime->{'TotalSeconds'};
 
-        my $ElapsedHour = int($ElapsedSeconds / 3600); 
-        my $ElapsedMin = int(($ElapsedSeconds - ($ElapsedHour * 3600)) / 60 ) ; 
-        my $ElapsedSec = int($ElapsedSeconds - ($ElapsedHour * 3600) - ($ElapsedMin * 60)) ; 
+		my $ElapsedHour = int($ElapsedSeconds / 3600); 
+		my $ElapsedMin = int(($ElapsedSeconds - ($ElapsedHour * 3600)) / 60 ) ; 
+		my $ElapsedSec = int($ElapsedSeconds - ($ElapsedHour * 3600) - ($ElapsedMin * 60)) ; 
 
-        $time  = sprintf("%02d:%02d:%02d", $ElapsedHour, $ElapsedMin, $ElapsedSec);
+		$time  = sprintf("%02d:%02d:%02d", $ElapsedHour, $ElapsedMin, $ElapsedSec);
 
-	$Timer1 = $Window->AddTimer('Timer1', 1000);
-    }
-    return $time;
+		$Timer1 = $Window->AddTimer('Timer1', 1000);
+	}
+	return $time;
 }
 
 sub StartContestTimer {
-    my $event_id = shift;
-    my $contest_id = shift;
+	my $event_id = shift;
+	my $contest_id = shift;
 
-    my $time = "00:00:00";
-    my $TimerFileName = "results/$event_id/$contest_id/timer.txt";
+	my $time = "00:00:00";
+	my $TimerFileName = "results/$event_id/$contest_id/timer.txt";
 
-    if ( ! -f $TimerFileName ) {
-	my ($sec, $min, $hour, undef) = localtime(time);
+	if ( ! -f $TimerFileName ) {
+		my ($sec, $min, $hour, undef) = localtime(time);
 
-	$StartTime->{'hour'} = $hour;
-    	$StartTime->{'min'} = $min;
-    	$StartTime->{'sec'} = $sec;
-    	$StartTime->{'TotalSeconds'} = ($StartTime->{'hour'} * 3600) + ($StartTime->{'min'} * 60) + $StartTime->{'sec'};
+		$StartTime->{'hour'} = $hour;
+		$StartTime->{'min'} = $min;
+		$StartTime->{'sec'} = $sec;
+		$StartTime->{'TotalSeconds'} = ($StartTime->{'hour'} * 3600) + ($StartTime->{'min'} * 60) + $StartTime->{'sec'};
 
-        open my $outFile, ">".$TimerFileName;
-        print $outFile $StartTime->{'TotalSeconds'}."\t".$StartTime->{'hour'}.":".$StartTime->{'min'}.":".$StartTime->{'sec'}."\n";
-        close $outFile;
+		open my $outFile, ">".$TimerFileName;
+		print $outFile $StartTime->{'TotalSeconds'}."\t".$StartTime->{'hour'}.":".$StartTime->{'min'}.":".$StartTime->{'sec'}."\n";
+		close $outFile;
 
-        $Timer1 = $Window->AddTimer('Timer1', 1000);
+		$Timer1 = $Window->AddTimer('Timer1', 1000);
+	}
+	else {
+		$time = LoadContestTimer($event_id, $contest_id);
     }
-    else {
-	$time = LoadContestTimer($event_id, $contest_id);
-    }
 
-    $txtClock->Text($time);
+	$txtClock->Text($time);
 
-    return $time;
+	return $time;
 }
 
 sub StopContestTimer {
-    my $event_id = shift;
-    my $contest_id = shift;
+	my $event_id = shift;
+	my $contest_id = shift;
 
-    $txtClock->Text("--:--:--");
+	$txtClock->Text("--:--:--");
 
-    if ( $Timer1 ) {
-        $Timer1->Kill();
-    }
+	if ( $Timer1 ) {
+		$Timer1->Kill();
+	}
 }
 
 sub ResetContestTimer {
-    my $event_id = shift;
-    my $contest_id = shift;
+	my $event_id = shift;
+	my $contest_id = shift;
 
-    my $filename = "results/${event_id}/${contest_id}/timer.txt";
-    unlink $filename;
+	my $filename = "results/${event_id}/${contest_id}/timer.txt";
+	unlink $filename;
 
-    $txtClock->Text("--:--:--");
+	$txtClock->Text("--:--:--");
 }
 
 ##
@@ -429,39 +427,39 @@ sub ResetContestTimer {
 ##
 
 sub LoadEventList {
-    # reset event data
-    %EventIndex = ();
-    $EventList->ResetContent();
+	# reset event data
+	%EventIndex = ();
+	$EventList->ResetContent();
 
-    # Populate EventList 
-    my $EventFileName = "results/event.txt";
-    open my $inEFile, "<".$EventFileName;
-    foreach my $line ( <$inEFile> ) {
-        chomp $line;
-        my ( $event_id, $description ) = split '\t', $line;
-        $EventList->InsertItem($description);
-        $EventIndex{$description} = $event_id;
-    }
-    close $inEFile;
+	# Populate EventList 
+	my $EventFileName = "results/event.txt";
+	open my $inEFile, "<".$EventFileName;
+	foreach my $line ( <$inEFile> ) {
+		chomp $line;
+		my ( $event_id, $description ) = split '\t', $line;
+		$EventList->InsertItem($description);
+		$EventIndex{$description} = $event_id;
+	}
+	close $inEFile;
 }
 
 sub LoadContestList {
-    my $event_id = shift;
+	my $event_id = shift;
 
-    # reset contest data
-    %ContestIndex = ();
-    $ContestList->ResetContent();
+	# reset contest data
+	%ContestIndex = ();
+	$ContestList->ResetContent();
 
-    # Populate ContestList 
-    my $ContestFileName = "results/$event_id/contest.txt";
-    open my $inCFile, "<".$ContestFileName;
-    foreach my $line ( <$inCFile> ) {
-        chomp $line;
-        my ( $contest_id, $description ) = split '\t', $line;
-        $ContestList->InsertItem($description);
-        $ContestIndex{$description} = $contest_id;
-    }
-    close $inCFile;
+	# Populate ContestList 
+	my $ContestFileName = "results/$event_id/contest.txt";
+	open my $inCFile, "<".$ContestFileName;
+	foreach my $line ( <$inCFile> ) {
+		chomp $line;
+		my ( $contest_id, $description ) = split '\t', $line;
+		$ContestList->InsertItem($description);
+		$ContestIndex{$description} = $contest_id;
+	}
+	close $inCFile;
 }
 
 sub LoadPersonList {
@@ -480,137 +478,137 @@ sub LoadPersonList {
 	open my $inPersonFile, "<".$filename;
 	my $header = <$inPersonFile>;
 	foreach my $line ( <$inPersonFile> ) {
-	    chomp $line;
-	    my $person;
-	    my ( $id,
-		 $number,
-	         $last_name,
-	         $first_name,
-	         $contest_id,
-	         $wave,
-	         $year,
-	         $sex,
-	         undef) = split '\t', $line;
-	    # Remove double quotes
-	    $last_name =~ s/\"//g;
-	    $first_name =~ s/\"//g;
-	    $place =~ s/\"//g;
-	    $sex =~ s/\"//g;
-            $sex = uc($sex);
-	    # set contest
-	    my $contest = "";
-	    if ( $sex ne "M" &&
-	         $sex ne "V" ) {
-	        $sex = "T";
-	    }
-	    $PersonIndex->{$number}->{'name'} = $last_name." ".$first_name;
-	    $PersonIndex->{$number}->{'contest_id'} = $contest_id;
-	    $PersonIndex->{$number}->{'wave'} = $wave;
-	    $PersonIndex->{$number}->{'year'} = $year;
-	    $PersonIndex->{$number}->{'sex'} = $sex;
+		chomp $line;
+		my $person;
+		my ( 
+			$id,
+			$number,
+			$last_name,
+			$first_name,
+			$contest_id,
+			$wave,
+			$year,
+			$sex,
+			undef) = split '\t', $line;
+		# Remove double quotes
+		$last_name =~ s/\"//g;
+		$first_name =~ s/\"//g;
+		$place =~ s/\"//g;
+		$sex =~ s/\"//g;
+		$sex = uc($sex);
+		# set contest
+		my $contest = "";
+		if ( $sex ne "M" &&
+			 $sex ne "V" ) {			$sex = "T";
+		}
+		$PersonIndex->{$number}->{'name'} = $last_name." ".$first_name;
+		$PersonIndex->{$number}->{'contest_id'} = $contest_id;
+		$PersonIndex->{$number}->{'wave'} = $wave;
+		$PersonIndex->{$number}->{'year'} = $year;
+		$PersonIndex->{$number}->{'sex'} = $sex;
 	}
 
 	close $inPersonFile;
 }
 
 sub AddResultToLog {
-    my $place = shift;
-    my $number = shift;
-    my $time = shift;
+	my $place = shift;
+	my $number = shift;
+	my $time = shift;
 
-    my $ResultFileName = "results/$event_id/$contest_id/result.log";
+	my $ResultFileName = "results/$event_id/$contest_id/result.log";
 
-    open my $outFile, ">>".$ResultFileName;
-    print $outFile $place."\t".$number."\t".$time."\n";
-    close $outFile;
+	open my $outFile, ">>".$ResultFileName;
+	print $outFile $place."\t".$number."\t".$time."\n";
+	close $outFile;
 }
 
 sub LoadContestResult {
-    my $event_id = shift;
-    my $contest_id = shift;
+	my $event_id = shift;
+	my $contest_id = shift;
 
-    # Reset place counter
-    
-    print STDERR "LoadContestResult\t$event_id:$contest_id\n";
+	# Reset place counter
 
-    if ( ! -d "results/$event_id/$contest_id" ) {
-        print STDERR "No Contest directory. Creating.\n";
-        mkdir "results/$event_id/$contest_id";
-        return;
-    }
+	print STDERR "LoadContestResult\t$event_id:$contest_id\n";
 
-    if ( ! -f "results/$event_id/$contest_id/result.txt" ) {
-        print STDERR "No file.\n";
-        return;
-    }
-    
-    my $ResultFileName = "results/$event_id/$contest_id/result.txt";
-    open my $inFile, "<".$ResultFileName;
+	if ( ! -d "results/$event_id/$contest_id" ) {
+		print STDERR "No Contest directory. Creating.\n";
+		mkdir "results/$event_id/$contest_id";
+		return;
+	}
 
-    my $row = 1;
-    foreach my $line ( <$inFile> ) {
-        chomp $line;
-        my ( $place, $number, $time, $name, $year, $sex ) = split /\t/, $line;
+	if ( ! -f "results/$event_id/$contest_id/result.txt" ) {
+		print STDERR "No file.\n";
+		return;
+	}
 
-        $Grid->SetCellText($row, 0, $place);
-        $Grid->SetCellText($row, 1, $number);
-        $Grid->SetCellText($row, 2, $time);
-        $Grid->SetCellText($row, 3, $name);
-        $Grid->SetCellText($row, 4, $year);
-        $Grid->SetCellText($row, 5, $sex);
-        $row++;
-    }
-    close $inFile;
+	my $ResultFileName = "results/$event_id/$contest_id/result.txt";
+	open my $inFile, "<".$ResultFileName;
 
-    $place = $row;
+	my $row = 1;
+	foreach my $line ( <$inFile> ) {
+		chomp $line;
+		my ( $place, $number, $time, $name, $year, $sex ) = split /\t/, $line;
+
+		$Grid->SetCellText($row, 0, $place);
+		$Grid->SetCellText($row, 1, $number);
+		$Grid->SetCellText($row, 2, $time);
+		$Grid->SetCellText($row, 3, $name);
+		$Grid->SetCellText($row, 4, $year);
+		$Grid->SetCellText($row, 5, $sex);
+		$row++;
+	}
+	close $inFile;
+
+	$place = $row;
 }
 
 sub SaveContestResult {
-    my $event_id = shift;
-    my $contest_id = shift;
+	my $event_id = shift;
+	my $contest_id = shift;
 
-    print STDERR "SaveContestResult\t$event_id:$contest_id\n";
+	print STDERR "SaveContestResult\t$event_id:$contest_id\n";
 
-    my $rows = $place - 1;
+	my $rows = $place - 1;
 
-    my $ResultFileName = "results/$event_id/$contest_id/result.txt";
-    open my $outFile, ">".$ResultFileName;
+	my $ResultFileName = "results/$event_id/$contest_id/result.txt";
+	open my $outFile, ">".$ResultFileName;
 
-    foreach my $row ( 1..$rows ) {
-        my $place = $Grid->GetCellText($row, 0);
-        my $number = $Grid->GetCellText($row, 1);
-        my $time = $Grid->GetCellText($row, 2);
-        my $name = $Grid->GetCellText($row, 3);
-        my $year = $Grid->GetCellText($row, 4);
-        my $sex = $Grid->GetCellText($row, 5);
-        print $outFile $place."\t".$number."\t".$time."\t".$name."\t".$year."\t".$sex."\n";
-    }
-    
-    close $outFile;
+	foreach my $row ( 1..$rows ) {
+		my $place = $Grid->GetCellText($row, 0);
+		my $number = $Grid->GetCellText($row, 1);
+		my $time = $Grid->GetCellText($row, 2);
+		my $name = $Grid->GetCellText($row, 3);
+		my $year = $Grid->GetCellText($row, 4);
+		my $sex = $Grid->GetCellText($row, 5);
+		print $outFile $place."\t".$number."\t".$time."\t".$name."\t".$year."\t".$sex."\n";
+	}
+
+	close $outFile;
 }
 
 sub ClearGrid {
-    my $Grid = shift;    
-    
-    print STDERR "ClearGrid\n";
-    
-    # Reset place counter.
-    $place = 1;
-    
-    # Header
-    $Grid->SetCellText(0, 0,"Plaats");
-    $Grid->SetCellText(0, 1,"Nummer");
-    $Grid->SetCellText(0, 2,"Totale Tijd");
-    $Grid->SetCellText(0, 3,"Naam");
-    $Grid->SetCellText(0, 4,"Geb.Jaar");
-    $Grid->SetCellText(0, 5,"M/V");
-    
-    for my $row (1..$Grid->GetRows()) {
-        $Grid->SetCellText($row, 0, "$row");
-        $Grid->SetCellText($row, 1, "--");
-        $Grid->SetCellText($row, 2, "--:--:--");
-        $Grid->SetCellText($row, 3, "");
-        $Grid->SetCellText($row, 4, "");
-        $Grid->SetCellText($row, 5, "");
-    }
+	my $Grid = shift;    
+
+	print STDERR "ClearGrid\n";
+
+	# Reset place counter.
+	$place = 1;
+
+	# Header
+	$Grid->SetCellText(0, 0,"Plaats");
+	$Grid->SetCellText(0, 1,"Nummer");
+	$Grid->SetCellText(0, 2,"Totale Tijd");
+	$Grid->SetCellText(0, 3,"Naam");
+	$Grid->SetCellText(0, 4,"Geb.Jaar");
+	$Grid->SetCellText(0, 5,"M/V");
+
+	for my $row (1..$Grid->GetRows()) {
+		$Grid->SetCellText($row, 0, "$row");
+		$Grid->SetCellText($row, 1, "--");
+		$Grid->SetCellText($row, 2, "--:--:--");
+		$Grid->SetCellText($row, 3, "");
+		$Grid->SetCellText($row, 4, "");
+		$Grid->SetCellText($row, 5, "");
+	}
 }
