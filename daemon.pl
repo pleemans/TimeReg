@@ -1,6 +1,11 @@
 #!/usr/bin/perl -w
 use strict;
 
+# Copyright 2006-2011 Leemans Peter <peter@bist2.be>
+# TimeReg is released under the terms and conditions of version 3 of the GNU Affero General Public License.
+# For further information please visit www.fsf.org/licensing/licenses/agpl-3.0.html 
+# or refer to the agpl.txt file included in the distribution package 
+
 use DBI;
 
 my $event_id = 1;
