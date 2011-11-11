@@ -1,4 +1,10 @@
 #!/usr/bin/perl -w
+
+# Copyright 2006-2011 Leemans Peter <peter@bist2.be>
+# TimeReg is released under the terms and conditions of version 3 of the GNU Affero General Public License.
+# For further information please visit www.fsf.org/licensing/licenses/agpl-3.0.html 
+# or refer to the agpl.txt file included in the distribution package 
+
 use strict;
 
 #use Time::localtime;
@@ -22,113 +28,113 @@ my %WaveIndex;
 my @ResultArray;
 
 # main Window
-my $Window = new Win32::GUI::Window (
 #my $Window = new Win32::GUI::DialogBox (
-        -title      => "Tijdsregistratie",
-        -pos        => [100, 20],
-        -size       => [800, 700],
-        -name       => "Window",
-        -dialogui   => 1,
-    ) or die "new Window";
+my $Window = new Win32::GUI::Window (
+	-title		=> "Tijdsregistratie",
+	-pos		=> [100, 20],
+	-size		=> [800, 700],
+	-name		=> "Window",
+	-dialogui	=> 1,
+) or die "new Window";
 
 my $fntBigRed = Win32::GUI::Font->new(
-        -name => "Comic Sans MS", 
-        -size => 24,
-    );
+	-name		=> "Comic Sans MS", 
+	-size		=> 24,
+);
 
 my $label = $Window->AddLabel(
-        -text   => "Tijdsregistratie",
-        -pos    => [50, 0],
-        -font   => $fntBigRed,
-        -foreground => [255, 0, 0],
-    );
+	-text		=> "Tijdsregistratie",
+	-pos		=> [50, 0],
+	-font		=> $fntBigRed,
+	-foreground	=> [255, 0, 0],
+);
 
 $Window->AddLabel(
-    -name   => "Combo_Label",
-    -text   => "Wedstrijd: ",
-    -left   => 25,
-    -top    => 80,
-    -width  => 180,
-    -height => 65,
-    -visible=> 1,
+	-name		=> "Combo_Label",
+	-text		=> "Wedstrijd: ",
+	-left		=> 25,
+	-top		=> 80,
+	-width		=> 180,
+	-height		=> 65,
+	-visible	=> 1,
 );
- 
+
 my $EventList = $Window->AddCombobox(
-    -name   => "EventDropdown",
-    -left   => 25,
-    -top    => 75,
-    -width  => 180,
-    -height => 65,
-    -dropdownlist => 1,
-    -vscroll => 1,    
+	-name			=> "EventDropdown",
+	-left			=> 25,
+	-top			=> 75,
+	-width			=> 180,
+	-height			=> 65,
+	-dropdownlist	=> 1,
+	-vscroll		=> 1,
 );
- 
+
 my $ContestList = $Window->AddCombobox(
-    -name   => "ContestDropdown",
-    -left   => 25,
-    -top    => 100,
-    -width  => 180,
-    -height => 65,
-    -dropdownlist => 1,
-    -vscroll => 1,    
+	-name			=> "ContestDropdown",
+	-left			=> 25,
+	-top			=> 100,
+	-width			=> 180,
+	-height			=> 65,
+	-dropdownlist	=> 1,
+	-vscroll		=> 1,
 );
- 
+
 # Grid Window
 my $Grid = $Window->AddGrid (
-    -name           => "Grid",
-    -pos            => [250, 50],
-    -columns        => 6,
-    -rows           => 500,
-    -fixedrows      => 1,
-    -fixedcolumns   => 1,
-    -editable       => 1,
-    -vscroll        => 1,
+	-name			=> "Grid",
+	-pos			=> [250, 50],
+	-columns		=> 6,
+	-rows			=> 500,
+	-fixedrows		=> 1,
+	-fixedcolumns	=> 1,
+	-editable		=> 1,
+	-vscroll		=> 1,
 ) or die "new Grid";
 
 my $txtClock = $Window->AddTextfield(
-    -name   => 'Clock',
-    -left   => 25,
-    -top    => 175,
-    -width  => 180,
-    -height => 65,
-    -prompt => "",
-    -font   => $fntBigRed,
-    -foreground => [255, 0, 0],
-    -edit   => 0,
+	-name		=> 'Clock',
+	-left		=> 25,
+	-top		=> 175,
+	-width		=> 180,
+	-height		=> 65,
+	-prompt		=> "",
+	-font		=> $fntBigRed,
+	-foreground	=> [255, 0, 0],
+	-edit		=> 0,
 );
 
 my $btnStartTimer = $Window->AddButton(
-    -name   => 'StartTimer',
-    -text   => "Start Timer",
-    -left   => 25,
-    -top    => 250,
+	-name		=> 'StartTimer',
+	-text		=> "Start Timer",
+	-left		=> 25,
+	-top		=> 250,
 );
 
 #my $btnStopTimer = $Window->AddButton(
-#    -name   => 'StopTimer',
-#    -text   => "Stop Timer",
-#    -left   => 100,
-#    -top    => 250,
+#	-name		=> 'StopTimer',
+#	-text		=> "Stop Timer",
+#	-left		=> 100,
+#	-top		=> 250,
 #);
 
 my $btnResetTimer = $Window->AddButton(
-    -name   => 'ResetTimer',
-    -text   => "Reset Timer",
-    -left   => 100,
-    -top    => 250,
+	-name		=> 'ResetTimer',
+	-text		=> "Reset Timer",
+	-left		=> 100,
+	-top		=> 250,
 );
 
 my $fldNumber = $Window->AddTextfield(
-    -name   => 'Nummer',
-    -left   => 75,
-    -top    => 400,
-    -width  => 100,
-    -height => 20,
-    -prompt => "Nummer :",
-    -ok     => 1,
-    -number => 1,
-    #-default => 1,
-    -tabstop => 1,
+	-name		=> 'Nummer',
+	-left		=> 75,
+	-top		=> 400,
+	-width		=> 100,
+	-height		=> 20,
+	-prompt		=> "Nummer :",
+	-ok			=> 1,
+	-number		=> 1,
+	#-default	=> 1,
+	-tabstop	=> 1,
 );
 
 my $btnOK = $Window->AddButton(
